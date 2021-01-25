@@ -1,5 +1,3 @@
-const CustomError = require("../extensions/custom-error");
-
 class VigenereCipheringMachine {
   constructor(value = true) {
     this.value = value;
@@ -10,8 +8,8 @@ class VigenereCipheringMachine {
       throw new Error('invalid value!');
     }
 
-    let arrMessage = message.toLowerCase().split('');
-    let arrKey = key.toLowerCase().split('');
+    let arrMessage = message.split('');
+    let arrKey = key.split('');
     let result = [];
  
     for (let el = 0; el < arrMessage.length; el++) {
@@ -45,8 +43,8 @@ class VigenereCipheringMachine {
     if (message === undefined || key === undefined || message === null || key === null) {
       throw new Error('invalid value!');
     }
-    let arrMessage = message.toLowerCase().split('');
-    let arrKey = key.toLowerCase().split('');
+    let arrMessage = message.split('');
+    let arrKey = key.split('');
     let result = [];
  
     for (let el = 0; el < arrMessage.length; el++) {
@@ -57,11 +55,11 @@ class VigenereCipheringMachine {
 
     for (let i = 0; i < arrMessage.length; i++) {
       let charCode = 0;
-      if (/[^a-z]/g.test(arrMessage[i])) {
+      if (/[^a-z]/g.test(arrMessage[i].toLowerCase())) {
         arrKey.splice(i, 0, ' '); 
         charCode = arrMessage[i].charCodeAt(0);
       } else {
-        charCode = arrMessage[i].charCodeAt(0) - Math.abs(97 - arrKey[i].charCodeAt(0));
+        charCode = arrMessage[i].toLowerCase().charCodeAt(0) - Math.abs(97 - arrKey[i].charCodeAt(0));
         if (charCode < 97) {
           charCode = (122 - (96 - charCode));
         }
@@ -77,4 +75,14 @@ class VigenereCipheringMachine {
   }
 }
 
-module.exports = VigenereCipheringMachine;
+const directMachine = new VigenereCipheringMachine();
+
+const reverseMachine = new VigenereCipheringMachine(false);
+
+console.log(directMachine.encrypt('attack at dawn!', 'alphonse')); //=> 'AEIHQX SX DLLU!'
+
+console.log(directMachine.decrypt('AEIHQX SX DLLU!', 'alphonse')); //=> 'ATTACK AT DAWN!'
+
+console.log(reverseMachine.encrypt('attack at dawn!', 'alphonse')) //=> '!ULLD XS XQHIEA'
+
+console.log(reverseMachine.decrypt('AEIHQX SX DLLU!', 'alphonse')) //=> '!NWAD TA KCATTA'
